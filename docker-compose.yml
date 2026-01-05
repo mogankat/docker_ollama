@@ -20,47 +20,50 @@ services:
     environment:
       - OLLAMA_BASE_URLS=http://nginx-lb/node1/;http://nginx-lb/node2/;http://nginx-lb/node3/;http://nginx-lb/node4/;http://nginx-lb/node5/;http://nginx-lb/node6/
       - ENABLE_PERSISTENT_CONFIG=False
-      - WEBUI_AUTH=False 
+      - ENABLE_AUTO_FUNCTIONS=True
+      - FUNCTIONS_DIR=/app/backend/functions
+      - ENABLE_FUNCTIONS_DIR_SYNC=True
       - WEBUI_NAME=I, for One, Welcome Our New AI Overlords
       - CORS_ALLOW_ORIGIN=*
     volumes:
-      - open-webui:/app/backend/data
+      - ./open-webui:/app/backend/data
+      - ./open-webui-data/functions:/app/backend/functions
     restart: always
 
   mistral:
     image: ollama/ollama:latest
     container_name: ollama-mistral
-    volumes: ["ollama_storage_1:/root/.ollama"]
+    volumes: ["./ollama_models/mistral:/root/.ollama"]
     restart: unless-stopped
 
   llama3:
     image: ollama/ollama:latest
     container_name: ollama-llama3
-    volumes: ["ollama_storage_2:/root/.ollama"]
+    volumes: ["./ollama_models/llama3:/root/.ollama"]
     restart: unless-stopped
 
   gemma3:
     image: ollama/ollama:latest
     container_name: ollama-gemma3
-    volumes: ["ollama_storage_3:/root/.ollama"]
+    volumes: ["./ollama_models/gemma3:/root/.ollama"]
     restart: unless-stopped
 
   deepseek:
     image: ollama/ollama:latest
     container_name: ollama-deepseek
-    volumes: ["ollama_storage_4:/root/.ollama"]
+    volumes: ["./ollama_models/deepseek:/root/.ollama"]
     restart: unless-stopped
 
   qwen3:
     image: ollama/ollama:latest
     container_name: ollama-qwen3
-    volumes: ["ollama_storage_5:/root/.ollama"]
+    volumes: ["./ollama_models/quen3:/root/.ollama"]
     restart: unless-stopped
 
   qwen3-coder:
     image: ollama/ollama:latest
     container_name: ollama-qwen3-coder
-    volumes: ["ollama_storage_6:/root/.ollama"]
+    volumes: ["./ollama_models/quen3-coder:/root/.ollama"]
     restart: unless-stopped
 
   model-importer:
@@ -90,12 +93,3 @@ services:
     ports:
       - "8888:8080"
     restart: unless-stopped
-
-volumes:
-  open-webui:
-  ollama_storage_1:
-  ollama_storage_2:
-  ollama_storage_3:
-  ollama_storage_4:
-  ollama_storage_5:
-  ollama_storage_6:
